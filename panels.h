@@ -3,7 +3,7 @@
 
 struct Entry
 {
-    bool select = false;
+    bool select = true;
 
     int x1, y1;
     int x2, y2;
@@ -11,14 +11,14 @@ struct Entry
     char Text[51] = {0};
     char why[2] = {0};
     char val[15] = {0};
-    void InitPanel(const char *, int, int, int, int, const char* endval = "");
+    void InitPanel(const char *, int, int, int, int, const char *endval = "");
     void DrawPanel();
     void UpdateInput();
     void Select(Vector2);
     int Read();
 };
 
-void Entry::InitPanel(const char text[2], int x1, int y1, int x2, int y2, const char *endval)
+void Entry::InitPanel(const char *text, int x1, int y1, int x2, int y2, const char *endval)
 {
     why[0] = text[0];
     why[1] = '\0';
@@ -36,9 +36,19 @@ void Entry::InitPanel(const char text[2], int x1, int y1, int x2, int y2, const 
 
 void Entry::DrawPanel()
 {
-    // 1. Рисуем рамку и градиент
-    DrawRectangle(x1, y1, x2, y2, BLACK);
-    DrawRectangleGradientH(x1 + bd, y1 + bd, x2 - (bd * 2), y2 - (bd * 2), WHITE, GRAY);
+    if (select)
+    {
+        // Активное состояние: рисуем рамку, например, RED или BLUE, и даем ей жирный отступ
+        DrawRectangle(x1, y1, x2, y2, BLUE); 
+        // Делаем внутренний отступ больше (bd * 2), чтобы синий цвет было хорошо видно
+        DrawRectangleGradientH(x1 + bd*2, y1 + bd*2, x2 - (bd * 4), y2 - (bd * 4), WHITE, LIGHTGRAY);
+    }
+    else
+    {
+        // Обычное состояние: тонкая черная рамка
+        DrawRectangle(x1, y1, x2, y2, BLACK);
+        DrawRectangleGradientH(x1 + bd, y1 + bd, x2 - (bd * 2), y2 - (bd * 2), WHITE, GRAY);
+    }
 
     // 2. Идеальный расчет для подсказки 'why'
     // Измеряем длину строки 'why' в пикселях при размере шрифта 10
@@ -110,7 +120,8 @@ void Entry::UpdateInput() // Убрали int maxwidth
 
         if (IsKeyDown(KEY_BACKSPACE) && IsKeyDown(KEY_LEFT_CONTROL) && len > 0)
         {
-            while(len > 0){
+            while (len > 0)
+            {
                 len--;
                 Text[len] = '\0';
             }

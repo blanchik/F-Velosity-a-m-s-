@@ -121,14 +121,17 @@ int main()
         BeginDrawing();
         ClearBackground(GRAY);
         DrawBox();
+
+        alfa.Select(GetMousePosition());
+
+        F.Select(GetMousePosition());
+
         F.UpdateInput();
         F.DrawPanel();
         alfa.UpdateInput();
         alfa.DrawPanel();
 
-        alfa.Select(GetMousePosition());
-
-        F.Select(GetMousePosition());
+        
 
         if (!whilepressed)
         {
